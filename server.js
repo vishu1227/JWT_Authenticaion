@@ -1,8 +1,14 @@
 const express=require('express');
 const app=express();
 
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+const { use } = require('passport');
+const { User, findAll, createNewUser } = require('./MYSQL_DB');
 app.use(express.json())
+
+const db=require('./MYSQL_DB').User
+
+require('./MYSQL_DB')
 
 const post=[
     {
@@ -15,17 +21,28 @@ const post=[
     }
 ]
 
+app.get('/',(req,res)=>{
+
+    createNewUser('4themail@gmail.com','12349').then(user=>{
+        res.send(user)
+    }).catch(err=>{
+        res.send(err)
+    })
+
+    // findAll().then((users)=>{
+    //     res.send(users)
+    // })
+    // .catch((err)=>{
+    //     res.send(err)
+    // })
+})
+
 app.get('/post',(req,res)=>{
     res.json(post)
 })
 
 app.post('/login',(req,res)=>{
     //Authenticate the User
-
-    const username=req.body.username
-    const user={name:username}
-
-    jwt.sign(user,process.env.ACEES_TOKEN_aSECRET)
 })
 
 app.listen(3000,()=>{
