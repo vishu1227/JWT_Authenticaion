@@ -33,7 +33,7 @@ db.sync().then(()=>{
     console.log(err)
 })
 
-const createNewUser=async (email,password,check)=>{
+const createNewUser=async (email,password)=>{
     return await User.create({
         email:email,
         password:await bcrypt.hash(password, 10)
@@ -48,6 +48,21 @@ const findOne=async (obj)=>{
     return await User.findOne({where:obj})
 }
 
+const isValidPassword = async (Epassword,userpassword)=>{
+    await bcrypt.compare(Epassword,userpassword,(err,isMatch)=>{
+        if(err)
+            throw err;
+        else if(!isMatch){
+            console.log('Password doest match!');
+            return "Yes matched!"
+        }
+        else{
+            console.log('Password match')
+            return "Not matched!"
+        }
+    })
+}
+
 exports=module.exports={
-    User,createNewUser,findAll,findOne
+    User,createNewUser,findAll,findOne,isValidPassword
 }

@@ -1,50 +1,22 @@
-const express=require('express');
-const app=express();
+const { static } = require('express');
+const express = require('express');
+const passport = require('passport');
+const route = require('./routes/routes');
+const bodyParser=require('body-parser');
 
-const jwt=require('jsonwebtoken');
-const { use } = require('passport');
-const { User, findAll, createNewUser } = require('./MYSQL_DB');
-app.use(express.json())
+const app = express();
 
-const db=require('./MYSQL_DB').User
+//it's for all the passport based authentication
+require('./auth/auth')
 
-require('./MYSQL_DB')
+const routes=require('./routes/routes')
+const secureRoute=require('./routes/secure-routes')
 
-const post=[
-    {
-        username:'Kim',
-        title:"Post 1"
-    },
-    {
-        username:'Jon',
-        title:"Post 2"
-    }
-]
+app.use('/',routes)
 
-app.get('/',(req,res)=>{
+// Plug in the JWT strategy as a middleware so only verified users can access this route.
+app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute);
 
-    createNewUser('4themail@gmail.com','12349').then(user=>{
-        res.send(user)
-    }).catch(err=>{
-        res.send(err)
-    })
-
-    // findAll().then((users)=>{
-    //     res.send(users)
-    // })
-    // .catch((err)=>{
-    //     res.send(err)
-    // })
-})
-
-app.get('/post',(req,res)=>{
-    res.json(post)
-})
-
-app.post('/login',(req,res)=>{
-    //Authenticate the User
-})
-
-app.listen(3000,()=>{
+app.listen(3000, () => {
     console.log('Server is live! at localhost:3000')
 })
