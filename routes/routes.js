@@ -3,6 +3,7 @@ const passport = require('passport')
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
+
 route.post('/signup',
     passport.authenticate('signup',{session:false}),async(req,res,next)=>{
         res.json({

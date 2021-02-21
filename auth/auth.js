@@ -23,7 +23,8 @@ passport.use('signup',new localStrategy(
             return done(null,user);
         })
         .catch(err=>{
-            done(err)
+            let error=new Error('This is an error send by the authorization:'+err)
+            done(error)
         })
     }
 ));
